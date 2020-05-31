@@ -5,6 +5,8 @@ Later, functionality will be merged to analyse part of benchmark (currently in r
 import pandas as pd
 import os
 import pickle
+import hashlib
+import json
 
 from copy import deepcopy
 from collections import OrderedDict
