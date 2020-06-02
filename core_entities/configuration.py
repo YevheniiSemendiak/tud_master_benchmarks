@@ -39,7 +39,9 @@ class Configuration:
         """
         self.logger = logging.getLogger(__name__)
         self._hyperparameters = OrderedDict()
+        self._parameters = hyperparameters
         self.hyperparameters = hyperparameters
+        self._average_result = []
         self._results: OrderedDict = OrderedDict()
         self._tasks = {}
         self.type = config_type
@@ -55,7 +57,15 @@ class Configuration:
     @property
     def hyperparameters(self):
         # TODO: replace deepcopy with immutable mappings.
-        return deepcopy(self._hyperparameters)
+        if "_hyperparameters" in dir(self):
+            # we are working with 'new' configuration
+            return deepcopy(self._hyperparameters)
+        else:
+            # we are working with "old" configuration, its an ad-hoc trick for benchmarks..
+            p_names = ["low level heuristic"]
+            for i in range(len(self._parameters) - 1):
+                p_names.append(str(i))
+            return dict(zip(p_names, self._parameters))
 
     @hyperparameters.setter
     def hyperparameters(self, hyperparameters: OrderedDict):
@@ -78,7 +88,12 @@ class Configuration:
 
     @property
     def results(self):
-        return deepcopy(self._results)
+        if "_hyperparameters" in dir(self):
+            # we are working with 'new' configuration
+            return deepcopy(self._results)
+        else:
+            # we are working with "old" configuration
+            return dict(zip(self.__class__.TaskConfiguration["ResultStructure"], self._average_result))
 
     @results.setter
     def results(self, results: OrderedDict):

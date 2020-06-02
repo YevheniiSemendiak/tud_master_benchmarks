@@ -38,7 +38,8 @@ def exp_progress_loader(exp: Experiment) -> pd.DataFrame:
         results['iteration'] = cfg_idx + 1
         data.append(results)
     df = pd.DataFrame(data)
-    df['Mode'] = exp.description["DomainDescription"]["DataFile"][exp.description["DomainDescription"]["DataFile"].rfind("/MH")+3:-9]
+    df['Mode'] = exp.description["DomainDescription"]["DataFile"][exp.description["DomainDescription"]["DataFile"].rfind("/") +1 :
+                                                                 exp.description["DomainDescription"]["DataFile"].rfind("Data")]
     return df
 
 
